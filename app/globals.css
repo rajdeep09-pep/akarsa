@@ -1,0 +1,259 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/* AKARSA Design System - Exact spec */
+:root {
+  --bg-primary: #0A0A0C;
+  --bg-secondary: #111116;
+  --bg-elevated: #1A1A22;
+  --surface: #22222A;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --text-primary: #FAFAFA;
+  --text-secondary: #9A9AAA;
+  --text-muted: #4A4A5A;
+  --accent: #E8447A;
+  --accent-hot: #FF2D6B;
+  --accent-cool: #6B3FA0;
+  --accent-success: #00D68F;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+  
+  /* Tailwind color mappings */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+}
+
+/* Grain Overlay - Global */
+@layer base {
+  @supports (background: url('data:image/svg+xml')) {
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise"/></filter><rect width="100%" height="100%" fill="%23000" filter="url(%23noise)" opacity="0.03"/></svg>');
+      pointer-events: none;
+      z-index: 9999;
+      animation: grain-shift 8s steps(10) infinite;
+    }
+  }
+
+  @keyframes grain-shift {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* GPU compositing for buttery scroll */
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-x: hidden;
+    /* Promote body to its own layer for smoother scrolling */
+    will-change: scroll-position;
+  }
+
+  /* Promote animated elements to GPU layers */
+  .fixed, [class*="fixed"] {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* Smooth tap targets on mobile */
+  a, button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better image rendering */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Responsive video */
+  video {
+    max-width: 100%;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+  }
+}
+
+/* Typography from spec */
+@layer utilities {
+  /* Overline: Inter 11px uppercase tracking 0.3em */
+  .overline {
+    font-family: var(--font-inter);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+  }
+
+  /* Body: Inter 16-18px weight 400 */
+  .body {
+    font-family: var(--font-inter);
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* H4: Inter 24px weight 500 */
+  .h4 {
+    font-family: var(--font-inter);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  /* H3: Inter clamp(28px, 3vw, 40px) weight 600 */
+  .h3 {
+    font-family: var(--font-inter);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 600;
+  }
+
+  /* H2: Playfair 48-96px weight 400 italic */
+  .h2 {
+    font-family: var(--font-playfair);
+    font-size: clamp(3rem, 6vw, 6rem);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  /* H1: Inter 64-160px weight 800 tracking -0.04em */
+  .h1 {
+    font-family: var(--font-inter);
+    font-size: clamp(4rem, 10vw, 10rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  /* Hero Display: Inter 72-200px weight 900 tracking -0.05em */
+  .hero-display {
+    font-family: var(--font-inter);
+    font-size: clamp(4.5rem, 14vw, 12.5rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+  }
+
+  /* Scribble/Annotations: Caveat 18-24px */
+  .scribble {
+    font-family: var(--font-caveat);
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    color: var(--accent);
+  }
+
+  /* Utility classes */
+  .text-accent {
+    color: var(--accent);
+  }
+
+  .text-accent-hot {
+    color: var(--accent-hot);
+  }
+
+  .text-accent-cool {
+    color: var(--accent-cool);
+  }
+
+  .container-akarsa {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(1.25rem, 5vw, 5rem);
+    padding-right: clamp(1.25rem, 5vw, 5rem);
+    max-width: 1440px;
+  }
+
+  /* Premium selection color */
+  ::selection {
+    background: rgba(255, 107, 107, 0.25);
+    color: #FAFAFA;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0C;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 107, 0.4);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF6B6B;
+  }
+
+  /* Gradient text utility — matches brand gradient: hot pink → deep purple */
+  .gradient-text {
+    background: linear-gradient(135deg, #E8447A 0%, #6B3FA0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Smooth page entry */
+  @keyframes pageEntry {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  body {
+    animation: pageEntry 0.4s ease forwards;
+  }
+}
